@@ -91,6 +91,10 @@ int32_t game_update(game_dir_t dir) {
     return -1;
 }
 
+static void countdown(){
+    return;
+}
+
 void game_init() {
     PRINTF("Initializing game. Max snake len: %d\n", GAME_SNAKE_LEN_MAX);
     food.x = 10;
@@ -102,5 +106,13 @@ void game_init() {
     snake[0].y = 5;
     snake[1].x = 4;
     snake[1].y = 5;
-    snake_dir = dir_up;
+    snake_dir = dir_right;
+
+    // Do a cool countdown here
+    countdown();
+    game_draw();
+}
+
+game_dir_t game_snake_dir_get(){
+    return snake_dir;
 }

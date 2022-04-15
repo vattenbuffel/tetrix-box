@@ -27,7 +27,6 @@ void button_update(button_t *button) {
 
     button->val_temp = digitalRead(button->gpio);
     if (button->val_temp != button->val_curr) {
-        Serial.println("Start val change");
         button->val_change_ongoing = true;
     } else {
         button->val_prev = button->val_curr;

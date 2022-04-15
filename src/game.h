@@ -13,10 +13,10 @@
 
 typedef enum{
     dir_none,
-    dir_left, 
-    dir_right,
     dir_up,
+    dir_left, 
     dir_down,
+    dir_right,
 } game_dir_t;
 
 typedef struct pos{
@@ -26,6 +26,7 @@ typedef struct pos{
 void game_draw();
 int32_t game_update(game_dir_t dir);
 void game_init();
+game_dir_t game_snake_dir_get();
 
 
 #endif
