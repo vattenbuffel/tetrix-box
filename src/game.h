@@ -8,11 +8,15 @@
 #define GAME_FOOD_SIZE 5
 #define GAME_SNAKE_PIECES_SIZE 5
 #define GAME_SNAKE_LEN_MAX (DISPLAY_W*DISPLAY_H / sq(GAME_SNAKE_PIECES_SIZE))
+#define GAME_W (DISPLAY_W / GAME_SNAKE_PIECES_SIZE)
+#define GAME_H (DISPLAY_H / GAME_SNAKE_PIECES_SIZE)
 
 typedef enum{
-    none,
-    left, 
-    right,
+    dir_none,
+    dir_left, 
+    dir_right,
+    dir_up,
+    dir_down,
 } game_dir_t;
 
 typedef struct pos{
