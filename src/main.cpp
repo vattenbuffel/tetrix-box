@@ -6,6 +6,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
+/* TODO: Massive compression of everything. Use bits to store board and shit */
+
 typedef enum {
     state_init,
     state_playing,
@@ -18,11 +20,16 @@ typedef enum {
 button_t button_left, button_right;
 static state_t state = state_init;
 static int32_t score;
-static char score_s[8];
+static char score_s[3];
+uint32_t game_run_last_ms;
 
-void game_start(){
+static uint8_t button_left_changed; // Combine both of these into 1 
+static uint8_t button_right_changed;
+
+void game_start() {
     game_init();
     state = state_playing;
+    game_run_last_ms = millis();
 }
 
 void setup() {
@@ -33,51 +40,34 @@ void setup() {
     button_init(&button_right, BUTTON_RIGHT_GPIO);
     display_init();
 
-	game_start();
+    game_start();
 }
 
-game_dir_t dir_get(){
-	bool button_right_pressed = button_right.val_curr == 0 && button_right.val_prev == 1;
-	bool button_left_pressed = button_left.val_curr == 0 && button_left.val_prev == 1;
-	game_dir_t snake_dir = game_snake_dir_get();
+game_dir_t dir_get() {
+    game_dir_t snake_dir = game_snake_dir_get();
 
-	if(button_right_pressed){
-		PRINTF("Button right pressed\n", NULL);
-		if(snake_dir == dir_up){
-			return dir_right;
-		}
-		return (game_dir_t) (snake_dir - 1);
-
-	} else if(button_left_pressed){
-		if(snake_dir == dir_right){
-			return dir_up;
-		}
-		return (game_dir_t) (snake_dir + 1);
-	}
-
-	return dir_none;
+    if (button_right_changed) {
+        button_right_changed = false;
+        if (BUTTON_PRESSED(button_right)) {
+            return (game_dir_t)((snake_dir + 1) % 4);
+        }
+    } else if (button_left_changed) {
+        button_left_changed = false;
+        if (BUTTON_PRESSED(button_left)) {
+            return snake_dir == dir_right ? dir_up
+                                          : (game_dir_t)(snake_dir + 1);
+        }
+    }
+    return dir_none;
 }
 
-
-void loop() {
-	button_update(&button_left);
-	button_update(&button_right);
-	// if (button_left.val_curr != button_left.val_prev) {
-	// 	serial_printf(Serial, "%l: left old_value: %d, new value: %d\n",
-	// 					millis(), button_left.val_prev, button_left.val_curr);
-	// }
-	// if (button_right.val_curr != button_right.val_prev) {
-	// 	serial_printf(Serial, "%l: right old_value: %d, new value: %d\n",
-	// 					millis(), button_right.val_prev, button_right.val_curr);
-	// }
-
+void state_loop() {
     if (state == state_playing) {
-		game_dir_t dir = dir_get();
-		PRINTF("Updated dir: %d\n", dir);
-        score = game_update(dir);
+        score = game_update();
         if (score != -1) {
             state = state_dead;
-			snprintf(score_s, sizeof(score_s), "%ld", score);
+            snprintf(score_s, sizeof(score_s), "%ld", score);
+            game_start();
         }
         game_draw();
 
@@ -88,15 +78,36 @@ void loop() {
         display->setTextColor(SSD1306_WHITE); // Draw white text
         display->setCursor(0, 0);             // Start at top-left corner
         display->print("You died.\n Score: ");
-        display->print(score_s); 
-		display->display();
-		
-		// Restart game
-		if(button_left.val_curr == 0 && button_right.val_curr == 0){
-			PRINTF("%s Restarting game\n", __func__);
-			game_start();
-		}
+        display->print(score_s);
+        display->display();
+
+        // Restart game
+        if (button_left.val_curr == 0 && button_right.val_curr == 0) {
+            PRINTF("%s Restarting game\n", __func__);
+            game_start();
+        }
+    } else {
+        serial_printf(Serial, "%s invalid state: %d\n", __func__, state);
+        for (;;)
+            delay(100);
+    }
+}
+
+void loop() {
+    // button_left_changed =  button_update(&button_left);
+    button_right_changed = button_update(&button_right);
+
+    if (button_right_changed) {
+        game_dir_t new_dir = dir_get();
+        if (new_dir != dir_none) {
+            game_snake_dir_set(new_dir);
+        } else{
+        }
     }
 
-    delay(50);
+    if (millis() - game_run_last_ms > 50) {
+        // PRINTF("%lu time to game_update\n", millis());
+        state_loop();
+        game_run_last_ms = millis();
+    }
 }

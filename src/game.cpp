@@ -4,7 +4,7 @@
 
 static int8_t len;
 static int16_t score;
-static pos_t snake[25];
+static pos_t snake[5]; // Instead of having it like this, keep it as an matrix with bits
 static pos_t food;
 static game_dir_t snake_dir;
 
@@ -49,11 +49,7 @@ static void dir_dxdy(int *dx, int *dy, game_dir_t dir) {
     }
 }
 
-int32_t game_update(game_dir_t dir) {
-    if (dir != dir_none) {
-        snake_dir = dir;
-    }
-
+int16_t game_update() {
     // Move body
     int dx, dy;
     dir_dxdy(&dx, &dy, snake_dir);
@@ -84,7 +80,7 @@ int32_t game_update(game_dir_t dir) {
     } 
 
     if (death) {
-        PRINTF("You died with score: %d\n", score);
+        // PRINTF("You died with score: %d\n", score);
         return score;
     }
 
@@ -96,7 +92,7 @@ static void countdown(){
 }
 
 void game_init() {
-    PRINTF("Initializing game. Max snake len: %d\n", GAME_SNAKE_LEN_MAX);
+    // PRINTF("Initializing game. Max snake len: %d\n", GAME_SNAKE_LEN_MAX);
     food.x = 10;
     food.y = 10;
 
@@ -115,4 +111,7 @@ void game_init() {
 
 game_dir_t game_snake_dir_get(){
     return snake_dir;
+}
+void game_snake_dir_set(game_dir_t dir){
+    snake_dir = dir;
 }

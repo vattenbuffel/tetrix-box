@@ -10,19 +10,26 @@ void button_init(button_t *button, int gpio) {
     button->val_change_ongoing = false;
 }
 
-void button_update(button_t *button) {
+uint8_t button_update(button_t *button) {
     if (button->val_change_ongoing) {
         if (millis() < button->time_val_change_ms + BUTTON_HOLD_MS) {
             if (digitalRead(button->gpio) != button->val_temp) {
                 button->val_change_ongoing = false;
             }
-            return;
+            return false;
         }
 
         button->val_change_ongoing = false;
         button->val_prev = button->val_curr;
         button->val_curr = button->val_temp;
-        return;
+        // serial_printf(Serial, "button changed. old val: %d, new val: %d\n", button->val_prev, button->val_curr);
+        if(BUTTON_PRESSED_P(button)){
+            return button_action_pressed;
+        } else if (BUTTON_RELEASED_P(button))
+        {
+            return button_action_released;
+        }
+        
     }
 
     button->val_temp = digitalRead(button->gpio);
@@ -32,4 +39,5 @@ void button_update(button_t *button) {
         button->val_prev = button->val_curr;
         button->val_curr = button->val_temp;
     }
+    return false;
 }

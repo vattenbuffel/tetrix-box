@@ -12,11 +12,11 @@
 #define GAME_H (DISPLAY_H / GAME_SNAKE_PIECES_SIZE)
 
 typedef enum{
-    dir_none,
-    dir_up,
-    dir_left, 
     dir_down,
+    dir_left, 
+    dir_up,
     dir_right,
+    dir_none
 } game_dir_t;
 
 typedef struct pos{
@@ -24,9 +24,10 @@ typedef struct pos{
 } pos_t;
 
 void game_draw();
-int32_t game_update(game_dir_t dir);
+int16_t game_update();
 void game_init();
 game_dir_t game_snake_dir_get();
+void game_snake_dir_set(game_dir_t dir);
 
 
 #endif
