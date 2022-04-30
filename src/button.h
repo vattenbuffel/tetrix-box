@@ -23,7 +23,7 @@ typedef struct button {
 } button_t;
 
 void button_update(button_t* button);
-void button_init(button_t* button, int gpio);
+void button_init(button_t* button, int8_t gpio);
 
 
 

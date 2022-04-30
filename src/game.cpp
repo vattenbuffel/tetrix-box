@@ -62,7 +62,7 @@ int16_t game_update() {
     snake[0].y += dy;
 
     // Check for death. Collision with body first, then sides
-    bool death = false;
+    uint8_t death = false;
     for (typeof(len) i = 1; i < len; i++) {
         if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
             death = true;

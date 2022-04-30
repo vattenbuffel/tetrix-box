@@ -1,7 +1,7 @@
 #include "button.h"
 #include "serial_print.h"
 
-void button_init(button_t *button, int gpio) {
+void button_init(button_t *button, int8_t gpio) {
     button->gpio = gpio;
     pinMode(button->gpio, INPUT);
     pinMode(button->gpio, INPUT_PULLUP);
