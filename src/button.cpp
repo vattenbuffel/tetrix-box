@@ -10,34 +10,29 @@ void button_init(button_t *button, int gpio) {
     button->val_change_ongoing = false;
 }
 
-uint8_t button_update(button_t *button) {
-    if (button->val_change_ongoing) {
-        if (millis() < button->time_val_change_ms + BUTTON_HOLD_MS) {
+void button_update(button_t *button) {
+    if (!button->val_change_ongoing) {
+        button->val_temp = digitalRead(button->gpio);
+        if (button->val_temp != button->val_curr) {
+            // Initiate val change
+            button->val_change_ongoing = true;
+            button->time_val_change_ms = millis();
+        } else {
+            // Same value twice in a row
+            button->val_prev = button->val_curr;
+            button->val_curr = button->val_temp;
+        }
+        return;
+    } else if (button->val_change_ongoing) {
+        // See if val has changed or if it was noise
+        if (millis() > button->time_val_change_ms + BUTTON_HOLD_MS) {
+            button->val_change_ongoing = false;
             if (digitalRead(button->gpio) != button->val_temp) {
-                button->val_change_ongoing = false;
+                return;
             }
-            return false;
+            button->val_prev = button->val_curr;
+            button->val_curr = button->val_temp;
+            return;
         }
-
-        button->val_change_ongoing = false;
-        button->val_prev = button->val_curr;
-        button->val_curr = button->val_temp;
-        // serial_printf(Serial, "button changed. old val: %d, new val: %d\n", button->val_prev, button->val_curr);
-        if(BUTTON_PRESSED_P(button)){
-            return button_action_pressed;
-        } else if (BUTTON_RELEASED_P(button))
-        {
-            return button_action_released;
-        }
-        
     }
-
-    button->val_temp = digitalRead(button->gpio);
-    if (button->val_temp != button->val_curr) {
-        button->val_change_ongoing = true;
-    } else {
-        button->val_prev = button->val_curr;
-        button->val_curr = button->val_temp;
-    }
-    return false;
 }
