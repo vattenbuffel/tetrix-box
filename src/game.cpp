@@ -14,7 +14,7 @@ void game_draw() {
 
     // Draw food
     display->fillCircle(food.x * GAME_FOOD_SIZE, food.y * GAME_FOOD_SIZE,
-                        GAME_FOOD_SIZE, SSD1306_INVERSE);
+                        GAME_FOOD_SIZE/2, SSD1306_INVERSE);
 
     // Draw body
     for (typeof(len) i = 0; i < len; i++) {
