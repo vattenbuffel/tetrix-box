@@ -45,9 +45,9 @@ void setup() {
 game_dir_t dir_get() {
     game_dir_t snake_dir = game_snake_dir_get();
 
-    if (BUTTON_PRESSED(button_right)) {
+    if (BUTTON_PRESSED(&button_right)) {
         return (game_dir_t)((snake_dir + 1) % 4);
-    } else if (BUTTON_PRESSED(button_left)) {
+    } else if (BUTTON_PRESSED(&button_left)) {
         return (game_dir_t)(snake_dir-1==-1 ? 3 : snake_dir-1);
     }
     return dir_none;
@@ -74,7 +74,7 @@ void state_loop() {
         display->display();
 
         // Restart game
-        if (button_left.val_curr == 0 && button_right.val_curr == 0) {
+        if (BUTTON_VAL_CUR_GET(&button_left) == 0 && BUTTON_VAL_CUR_GET(&button_right) == 0) {
             PRINTF("%s Restarting game\n", __func__);
             game_start();
         }
@@ -89,7 +89,7 @@ void loop() {
     button_update(&button_left);
     button_update(&button_right);
 
-    if (BUTTON_PRESSED(button_right) || BUTTON_PRESSED(button_left)) {
+    if (BUTTON_PRESSED(&button_right) || BUTTON_PRESSED(&button_left)) {
         game_dir_t new_dir = dir_get();
         if (new_dir != dir_none) {
             game_snake_dir_set(new_dir);

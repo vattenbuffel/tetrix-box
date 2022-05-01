@@ -5,33 +5,34 @@ void button_init(button_t *button, int8_t gpio) {
     button->gpio = gpio;
     pinMode(button->gpio, INPUT);
     pinMode(button->gpio, INPUT_PULLUP);
-    button->val_prev = false;
-    button->val_curr = false;
-    button->val_change_ongoing = false;
+    BUTTON_VAL_PREV_SET(button, false);
+    BUTTON_VAL_CUR_SET(button, false);
+    BUTTON_VAL_TEMP_SET(button, false);
+    BUTTON_CHANGE_ONGOING_SET(button, false);
 }
 
 void button_update(button_t *button) {
-    if (!button->val_change_ongoing) {
-        button->val_temp = digitalRead(button->gpio);
-        if (button->val_temp != button->val_curr) {
+    if (!BUTTON_CHANGE_ONGOING_GET(button)) {
+        BUTTON_VAL_TEMP_SET(button, digitalRead(button->gpio));
+        if (BUTTON_VAL_TEMP_GET(button) != BUTTON_VAL_CUR_GET(button)) {
             // Initiate val change
-            button->val_change_ongoing = true;
+            BUTTON_CHANGE_ONGOING_SET(button, true);
             button->time_val_change_ms = millis();
         } else {
             // Same value twice in a row
-            button->val_prev = button->val_curr;
-            button->val_curr = button->val_temp;
+            BUTTON_VAL_PREV_SET(button, BUTTON_VAL_CUR_GET(button));
+            BUTTON_VAL_CUR_SET(button, BUTTON_VAL_TEMP_GET(button));
         }
         return;
-    } else if (button->val_change_ongoing) {
+    } else if (BUTTON_CHANGE_ONGOING_GET(button)) {
         // See if val has changed or if it was noise
         if (millis() > button->time_val_change_ms + BUTTON_HOLD_MS) {
-            button->val_change_ongoing = false;
-            if (digitalRead(button->gpio) != button->val_temp) {
+            BUTTON_CHANGE_ONGOING_SET(button, false);
+            if (digitalRead(button->gpio) != BUTTON_VAL_TEMP_GET(button)) {
                 return;
             }
-            button->val_prev = button->val_curr;
-            button->val_curr = button->val_temp;
+            BUTTON_VAL_PREV_SET(button, BUTTON_VAL_CUR_GET(button));
+            BUTTON_VAL_CUR_SET(button, BUTTON_VAL_CUR_GET(button));
             return;
         }
     }
