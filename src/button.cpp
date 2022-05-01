@@ -32,7 +32,7 @@ void button_update(button_t *button) {
                 return;
             }
             BUTTON_VAL_PREV_SET(button, BUTTON_VAL_CUR_GET(button));
-            BUTTON_VAL_CUR_SET(button, BUTTON_VAL_CUR_GET(button));
+            BUTTON_VAL_CUR_SET(button, BUTTON_VAL_TEMP_GET(button));
             return;
         }
     }
