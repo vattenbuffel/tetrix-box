@@ -4,7 +4,7 @@
 
 static int8_t len;
 static int16_t score;
-static pos_t snake[5]; 
+static pos_t snake[5];
 static pos_t food;
 static game_dir_t snake_dir;
 
@@ -49,6 +49,16 @@ static void dir_dxdy(int *dx, int *dy, game_dir_t dir) {
     }
 }
 
+static void food_spawn() {
+    food.x = random(GAME_W);
+    food.y = random(GAME_H);
+}
+
+static void eat() {
+    len++;
+    food_spawn();
+}
+
 int16_t game_update() {
     // Move body
     int dx, dy;
@@ -83,6 +93,11 @@ int16_t game_update() {
         return score;
     }
 
+    // Check if head collides with food. If so, eat.
+    if (snake[0].x == food.x && snake[0].y == food.y) {
+        eat();
+    }
+
     return -1;
 }
 
@@ -91,6 +106,7 @@ static void countdown() { return; }
 void game_init() {
     food.x = 10;
     food.y = 10;
+    // food_spawn();
 
     len = 2;
     score = 0;
