@@ -1,8 +1,0 @@
-ram used: 677 bytes
-remove game_t enum: 676 byte
-remove state_t enum: 675 bytes
-add button's gpio num to data byte: 671 bytes
-remove uselss prints: 591 bytes
-add eat: 595 bytes
-add countdown text: 617 bytes
-
