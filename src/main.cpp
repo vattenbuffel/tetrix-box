@@ -50,7 +50,7 @@ game_dir_t dir_get() {
     } else if (BUTTON_PRESSED(&button_left)) {
         return (game_dir_t)(snake_dir-1==-1 ? 3 : snake_dir-1);
     }
-    return dir_none;
+    return DIR_NONE;
 }
 
 void state_loop() {
@@ -91,7 +91,7 @@ void loop() {
 
     if (BUTTON_PRESSED(&button_right) || BUTTON_PRESSED(&button_left)) {
         game_dir_t new_dir = dir_get();
-        if (new_dir != dir_none) {
+        if (new_dir != DIR_NONE) {
             game_snake_dir_set(new_dir);
         }
     }

@@ -4,8 +4,7 @@
 
 static int8_t len;
 static int16_t score;
-static pos_t
-    snake[5]; // Instead of having it like this, keep it as an matrix with bits
+static pos_t snake[5]; 
 static pos_t food;
 static game_dir_t snake_dir;
 
@@ -35,16 +34,16 @@ void game_draw() {
 }
 
 static void dir_dxdy(int *dx, int *dy, game_dir_t dir) {
-    if (dir == dir_up) {
+    if (dir == DIR_UP) {
         *dx = 0;
         *dy = -1;
-    } else if (dir == dir_right) {
+    } else if (dir == DIR_RIGHT) {
         *dx = 1;
         *dy = 0;
-    } else if (dir == dir_down) {
+    } else if (dir == DIR_DOWN) {
         *dx = 0;
         *dy = 1;
-    } else if (dir == dir_left) {
+    } else if (dir == DIR_LEFT) {
         *dx = -1;
         *dy = 0;
     }
@@ -101,7 +100,7 @@ void game_init() {
     snake[0].y = 5;
     snake[1].x = 4;
     snake[1].y = 5;
-    snake_dir = dir_right;
+    snake_dir = DIR_RIGHT;
 
     // Do a cool countdown here
     countdown();
