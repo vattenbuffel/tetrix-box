@@ -80,7 +80,6 @@ int16_t game_update() {
     }
 
     if (death) {
-        // PRINTF("You died with score: %d\n", score);
         return score;
     }
 
@@ -90,7 +89,6 @@ int16_t game_update() {
 static void countdown() { return; }
 
 void game_init() {
-    // PRINTF("Initializing game. Max snake len: %d\n", GAME_SNAKE_LEN_MAX);
     food.x = 10;
     food.y = 10;
 

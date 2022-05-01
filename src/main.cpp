@@ -7,9 +7,7 @@
 #include <Wire.h>
 
 /* TODO: Massive compression of everything. Use bits to store board and shit
-    Replace enums with defs when possible
  */
-
 
 typedef uint8_t state_t;
 #define STATE_INIT 0
@@ -75,11 +73,12 @@ void state_loop() {
 
         // Restart game
         if (BUTTON_VAL_CUR_GET(&button_left) == 0 && BUTTON_VAL_CUR_GET(&button_right) == 0) {
-            PRINTF("%s Restarting game\n", __func__);
+            Serial.println(F("Restarting game"));
             game_start();
         }
     } else {
-        serial_printf(Serial, "%s invalid state: %d\n", __func__, state);
+        Serial.print(F("Invalid state"));
+        Serial.println(state);
         for (;;)
             delay(100);
     }
