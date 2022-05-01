@@ -4,7 +4,7 @@
 
 static int8_t len;
 static int16_t score;
-static pos_t snake[5];
+static pos_t snake[100];
 static pos_t food;
 static game_dir_t snake_dir;
 
@@ -14,7 +14,7 @@ void game_draw() {
 
     // Draw food
     display->fillCircle(food.x * GAME_FOOD_SIZE, food.y * GAME_FOOD_SIZE,
-                        GAME_FOOD_SIZE/2, SSD1306_INVERSE);
+                        GAME_FOOD_SIZE / 2, SSD1306_INVERSE);
 
     // Draw body
     for (typeof(len) i = 0; i < len; i++) {
@@ -102,7 +102,19 @@ int16_t game_update() {
     return -1;
 }
 
-static void countdown() { return; }
+static void countdown() {
+    uint32_t start_time = millis();
+    Adafruit_SSD1306 *display = display_get();
+    display->setTextSize(2);              // Normal 1:1 pixel scale
+    display->setTextColor(SSD1306_WHITE); // Draw white text
+    while (millis() < start_time + 3000) {
+        display->clearDisplay();
+        display->setCursor(0, 10); // Start at top-left corner
+        display->print("Start in: ");
+        display->print(((start_time + 3000) - millis())/1000.f);
+        display->display();
+    }
+}
 
 void game_init() {
     food.x = 10;

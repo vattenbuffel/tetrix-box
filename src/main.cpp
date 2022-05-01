@@ -6,9 +6,6 @@
 #include <SPI.h>
 #include <Wire.h>
 
-/* TODO: Massive compression of everything. Use bits to store board and shit
- */
-
 typedef uint8_t state_t;
 #define STATE_INIT 0
 #define STATE_PLAYING 1
@@ -64,10 +61,10 @@ void state_loop() {
     } else if (state == STATE_DEAD) {
         Adafruit_SSD1306 *display = display_get();
         display->clearDisplay();
-        display->setTextSize(1);              // Normal 1:1 pixel scale
+        display->setTextSize(2);              // Normal 1:1 pixel scale
         display->setTextColor(SSD1306_WHITE); // Draw white text
-        display->setCursor(0, 0);             // Start at top-left corner
-        display->print("You died.\n Score: ");
+        display->setCursor(0, 10);             // Start at top-left corner
+        display->print("You died.\nScore: ");
         display->print(score_s);
         display->display();
 
