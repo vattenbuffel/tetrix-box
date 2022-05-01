@@ -57,7 +57,7 @@ void state_loop() {
         if (score != -1) {
             state = STATE_DEAD;
             snprintf(score_s, sizeof(score_s), "%d", score);
-            game_start();
+            // game_start();
         }
         game_draw();
 
@@ -88,7 +88,7 @@ void loop() {
     button_update(&button_left);
     button_update(&button_right);
 
-    if (BUTTON_PRESSED(&button_right) || BUTTON_PRESSED(&button_left)) {
+    if (state == STATE_PLAYING && BUTTON_PRESSED(&button_right) || BUTTON_PRESSED(&button_left)) {
         game_dir_t new_dir = dir_get();
         if (new_dir != DIR_NONE) {
             game_snake_dir_set(new_dir);

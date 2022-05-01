@@ -96,6 +96,7 @@ int16_t game_update() {
     // Check if head collides with food. If so, eat.
     if (snake[0].x == food.x && snake[0].y == food.y) {
         eat();
+        score += (len - GAME_START_LEN) * 10;
     }
 
     return -1;
@@ -108,7 +109,7 @@ void game_init() {
     food.y = 10;
     // food_spawn();
 
-    len = 2;
+    len = GAME_START_LEN;
     score = 0;
     snake[0].x = 5;
     snake[0].y = 5;
