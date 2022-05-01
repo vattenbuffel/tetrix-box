@@ -11,16 +11,8 @@
 #define GAME_W (DISPLAY_W / GAME_SNAKE_PIECES_SIZE)
 #define GAME_H (DISPLAY_H / GAME_SNAKE_PIECES_SIZE)
 
-// typedef enum{
-//     dir_down,
-//     dir_left, 
-//     dir_up,
-//     dir_right,
-//     dir_none
-// } game_dir_t;
 
 typedef uint8_t game_dir_t;
-
 #define DIR_DOWN 0
 #define DIR_LEFT 1
 #define DIR_UP 2

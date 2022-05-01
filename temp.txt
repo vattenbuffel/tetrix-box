@@ -1,0 +1,5 @@
+ram used: 677 bytes
+remove game_t enum: 676 byteso
+
+aiatehaeth
+oiatenhaoitnETHATiointeah

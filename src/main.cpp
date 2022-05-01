@@ -10,24 +10,24 @@
     Replace enums with defs when possible
  */
 
-typedef enum {
-    state_init,
-    state_playing,
-    state_dead,
-} state_t;
+
+typedef uint8_t state_t;
+#define STATE_INIT 0
+#define STATE_PLAYING 1
+#define STATE_DEAD 2
 
 #define BUTTON_LEFT_GPIO 6
 #define BUTTON_RIGHT_GPIO 7
 
 button_t button_left, button_right;
-static state_t state = state_init;
-static int32_t score;
+static state_t state = STATE_INIT;
+static int16_t score;
 static char score_s[3];
 uint32_t game_run_last_ms;
 
 void game_start() {
     game_init();
-    state = state_playing;
+    state = STATE_PLAYING;
     game_run_last_ms = millis();
 }
 
@@ -54,16 +54,16 @@ game_dir_t dir_get() {
 }
 
 void state_loop() {
-    if (state == state_playing) {
+    if (state == STATE_PLAYING) {
         score = game_update();
         if (score != -1) {
-            state = state_dead;
-            snprintf(score_s, sizeof(score_s), "%ld", score);
+            state = STATE_DEAD;
+            snprintf(score_s, sizeof(score_s), "%d", score);
             game_start();
         }
         game_draw();
 
-    } else if (state == state_dead) {
+    } else if (state == STATE_DEAD) {
         Adafruit_SSD1306 *display = display_get();
         display->clearDisplay();
         display->setTextSize(1);              // Normal 1:1 pixel scale
